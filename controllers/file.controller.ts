@@ -1,7 +1,8 @@
+import { Request, Response } from "express";
 import fs from "fs";
 
 class MyFile {
-  readMyFile(req, res) {
+  readMyFile(req:Request, res:Response) {
     let readStream = fs.createReadStream("express/" + "../public/data.txt");
     //to print the buffer
     readStream.on("data", (chunk) => {
@@ -10,12 +11,13 @@ class MyFile {
     });
     readStream.pipe(res);
   }
-  writeStream(req, res) {
+  writeStream(req:Request, res:Response) {
     let writeStream = fs.createWriteStream(
       "express/" + "../public/newData.txt"
     );
-    
-    writeStream.pipe(res);
+    writeStream.write("Welcom Aspirian");
+    let reader = fs.createReadStream("express/" + "../public/newData.txt");
+    reader.pipe(res); //piping for readable stream only
   }
 }
 
