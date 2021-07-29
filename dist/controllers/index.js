@@ -13,3 +13,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./birds.controller"), exports);
 __exportStar(require("./error.controller"), exports);
 __exportStar(require("./file.controller"), exports);
+__exportStar(require("./upload.controller"), exports);

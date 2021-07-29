@@ -1,20 +1,25 @@
 import express, { Request, Response } from "express";
 import helmet from "helmet";
-// import compression from "compression";
+import actuator from "express-actuator";
+import { createHttpTerminator } from "http-terminator";
+import { createLightship } from "lightship";
+// import { MongoClient } from "mongodb";
 
 import { apiError } from "./controllers";
 import authentication from "./middleware/basicAuth.middleware.js";
-import { fileRouter, router } from "./routes";
+import { fileRouter, router, upload_multiple, upload_single } from "./routes";
 
 const app = express();
-
-app.use(helmet());
-// app.use(compression());
-
-app.use(authentication);
+const lightship = createLightship();
+app.use(helmet()); //for security
+// app.use(express.urlencoded({ extended: false }));
+app.use(actuator());
+// app.use(authentication);
 
 app.use("/birds", router);
 app.use("/files", fileRouter);
+app.use("/image", upload_single);
+app.use("/images", upload_multiple);
 
 app.get("/countdown", function (req: Request, res: Response) {
   res.writeHead(200, {
@@ -42,6 +47,35 @@ app.use(apiError.errorHandler);
 // app.use(express.static("public")); //http://localhost:8080/front.html =>html page
 // app.use("/static", express.static("public")); //http://localhost:8080/static/front.html
 
-app.listen(8080,()=>{
+const server = app.listen(8080, () => {
+  lightship.signalReady();
   console.log("Server started..");
 });
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  server.close(() => {
+    console.log("HTTP server closed");
+  });
+});
+
+const terminator = createHttpTerminator({ server });
+
+// setTimeout(() => {
+// console.log("Server terminated");
+// terminator.terminate(); //server will be terminated after 5 sec
+// }, 1000);
+
+const MongoClient = require("mongodb").MongoClient;
+MongoClient.connect(
+  "mongodb://localhost:27017/Dog-data",
+  (err: Error, client: any) => {
+    const db = client.db("Dog-data");
+    // console.log(db.collection("example").find()); 
+    db.collection("example")
+      .find()
+      .toArray((_er: Error, res: any) => {
+        console.log(res);
+      });
+  }
+);

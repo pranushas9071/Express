@@ -10,4 +10,6 @@ var controllers_1 = require("../controllers");
 exports.fileRouter = express_1.default.Router();
 exports.fileRouter.get("/aspire", controllers_1.myFile.readMyFile);
 exports.fileRouter.get("/welcome", controllers_1.myFile.writeStream);
+exports.fileRouter.get("/handle", controllers_1.myFile.handle);
+exports.fileRouter.get("/aspireFile", controllers_1.myFile.readFileBySend);
 // export default fileRouter;

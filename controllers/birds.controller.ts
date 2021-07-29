@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
 class Bird {
-  home(req:Request, res:Response) {
+  home(req: Request, res: Response) {
     res.send("Home page...");
   }
-  about(req:Request, res:Response): void {
+  about(req: Request, res: Response): void {
     // throw "Testing";
     res.send("About birds...");
   }

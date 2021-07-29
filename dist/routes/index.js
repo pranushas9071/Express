@@ -14,3 +14,4 @@ exports.router = void 0;
 var birds_route_1 = require("./birds.route");
 Object.defineProperty(exports, "router", { enumerable: true, get: function () { return birds_route_1.router; } });
 __exportStar(require("./file.route"), exports);
+__exportStar(require("./upload.route"), exports);
